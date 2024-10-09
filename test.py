@@ -8,7 +8,6 @@ description: A pipeline to testt out tool calling capabilities.
 requirements: urllib, difflib
 """
 import requests
-from typing import Literal, Dict, Any
 from datetime import datetime
 import urllib.parse
 
@@ -16,12 +15,24 @@ from blueprints.function_calling_blueprint import Pipeline as FunctionCallingBlu
 
 class Pipeline(FunctionCallingBlueprint):
     class Valves(FunctionCallingBlueprint.Valves):
-        search_base_url: str = "http://localhost:8080"
-        param2: str = ""
+        SEARCH_BASE: str = "http://localhost:8080"
 
     class Tools:
         def __init__(self, pipeline) -> None:
             self.pipeline = pipeline
+
+        def get_current_time(
+            self,
+        ) -> str:
+            """
+            Get the current time.
+
+            :return: The current time.
+            """
+
+            now = datetime.now()
+            current_time = now.strftime("%H:%M:%S")
+            return f"Current Time = {current_time}"
 
         def generate_and_save_image(self, prompt: str) -> str:
             """
@@ -49,7 +60,7 @@ class Pipeline(FunctionCallingBlueprint):
             encoded_prompt = urllib.parse.quote(prompt)
 
             # Define the search URL with the encoded prompt
-            url = f"{self.pipeline.valves.search_base_url}/search?q={encoded_prompt}&format={format}&count={count}&safe={safe}"
+            url = f"{self.pipeline.valves.SEARCH_BASE}/search?q={encoded_prompt}&format={format}&count={count}&safe={safe}"
             
             headers = {
                 'User-Agent': 'Mozilla/5.0'
