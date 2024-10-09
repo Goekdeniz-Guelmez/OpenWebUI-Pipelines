@@ -15,7 +15,7 @@ from blueprints.function_calling_blueprint import Pipeline as FunctionCallingBlu
 
 class Pipeline(FunctionCallingBlueprint):
     class Valves(FunctionCallingBlueprint.Valves):
-        SEARCH_BASE: str = "http://localhost:8080"
+        SEARCH_BASE: str = ""
 
     class Tools:
         def __init__(self, pipeline) -> None:
